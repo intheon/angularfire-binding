@@ -11,6 +11,21 @@
 	
 	<section>
 		<h1>hello</h1>
+		<div ng-hide="main.isLoggedIn">You are browsing as a guest</div>
+		<div ng-show="main.isLoggedIn">
+			<span>Welcome back</span>
+			<span ng-if="main.userDetails">{{ main.userDetails.uid }}</span>
+		</div>
+	</section>
+
+	<section ng-hide="main.isLoggedIn">
+		<h2>log in</h2>
+		<div ng-click="main.signIn()">Sign in</div>
+	</section>
+
+	<section ng-show="main.isLoggedIn">
+		<h2>log out</h2>
+		<div ng-click="main.signOut()">Sign out</div>
 	</section>
 
 </main>
