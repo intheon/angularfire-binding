@@ -1,0 +1,6 @@
+bower_components/
+data/
+node_modules/
+jspm_packages/
+server/*.p12
+server/keys/*
