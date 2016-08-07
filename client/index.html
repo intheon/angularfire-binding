@@ -32,7 +32,13 @@
 
 		<div class="todo-app right">
 			<h4>todo app</h4>
-			<div class="current-todos"></div>
+			<div class="current-todos">
+				<div ng-repeat="todo in main.allTodos">
+					<h4>{{ todo.title }}</h4>
+					<time>{{ todo.timeAdded | date }}</time>
+				</div>
+
+			</div>
 			<div class="new-todo">
 				<input type="text" placeholder="add todo" ng-model="main.todoTitle"/>
 				<input type="button" value="submit" ng-click="main.submitTodo()" />

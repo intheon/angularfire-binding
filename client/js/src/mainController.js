@@ -13,6 +13,7 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 
 	this.userDetails = null;
 	this.todoTitle = null;
+	this.allTodos = null;
 	$scope.auth = $firebaseAuth();
 
 	this.signIn = () => {
@@ -22,10 +23,20 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 			this.userDetails = user;
 			this.isLoggedIn = true;
 			this.createUser();
+			this.retreiveTodos();
 		})
 		.catch((error) => {
 			console.log(error)
 		})
+	}
+
+	this.retreiveTodos = () => {
+		let ref = firebase.database().ref("user-todos/" + this.userDetails.user.uid);
+		this.allTodos = $firebaseObject(ref);
+
+		console.log(this.allTodos);
+
+
 	}
 
 	this.signOut = () => {
@@ -35,38 +46,25 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 	}
 
 	this.createUser = () => {
-		console.log("hello!");
 		let ref = firebase.database().ref("profiles/" + this.userDetails.user.uid).set({
 			fullName: this.userDetails.user.displayName,
 			email: this.userDetails.user.email,
 			photo : this.userDetails.user.photoURL
-		})
-		console.log(ref);
-
-		/*
-		let obj = $firebaseObject(ref);
-
-		obj.$save().then((res) => {
-			console.log("worked?");
-			console.log(res);
-		}).catch((e) => {
-			console.log("no");
-			console.log(e);
-		})
-		*/
+		});
 	}
 
 	this.submitTodo = () => {
-		if (this.todoTitle){/*
-			let ref = firebase.database().ref("todos").push();
-			let profileRef = ref.child(this.userDetails.user.uid)
-			$firebaseObject(profileRef).$save().then((response) => {
-				console.log("saved?");
-				console.log(response)
-			}).catch((error) => {
-				console.log("error?");
-				console.log(error);
-			})*/
+		if (this.todoTitle){
+			let key = firebase.database().ref("todos").push().key;
+
+			let todoMeta = {
+				title: this.todoTitle,
+				timeAdded: Date.now(),
+				ownerId: this.userDetails.user.uid
+			}
+
+			let addToAll = firebase.database().ref("todos/" + key).set(todoMeta);
+			let addUserTodos = firebase.database().ref("user-todos/" + todoMeta.ownerId + "/" + key).set(todoMeta);
 		}
 	}
 
