@@ -22,6 +22,7 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 
 			this.userDetails = user;
 			this.isLoggedIn = true;
+			this.createUser();
 			this.retreiveTodos();
 
 		});
