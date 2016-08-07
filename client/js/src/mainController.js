@@ -16,11 +16,24 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 	this.allTodos = null;
 	$scope.auth = $firebaseAuth();
 
+
+	this.doGuestLogin = () => {
+		$scope.auth.$signInWithEmailAndPassword("guestaccount@intheon.uk", "guest123456").then((user) => {
+
+			this.userDetails = user;
+			this.isLoggedIn = true;
+			this.retreiveTodos();
+
+		});
+	}
+
+	this.doGuestLogin();
+
 	this.signIn = () => {
 		$scope.auth.$signInWithPopup("google")
 		.then((user) => {
 			console.log(user)
-			this.userDetails = user;
+			this.userDetails = user.user;
 			this.isLoggedIn = true;
 			this.createUser();
 			this.retreiveTodos();
@@ -31,7 +44,9 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 	}
 
 	this.retreiveTodos = () => {
-		let ref = firebase.database().ref("user-todos/" + this.userDetails.user.uid);
+
+		console.log("retreive...")
+		let ref = firebase.database().ref("user-todos/" + this.userDetails.uid);
 		this.allTodos = $firebaseObject(ref);
 
 		console.log(this.allTodos);
@@ -46,10 +61,10 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 	}
 
 	this.createUser = () => {
-		let ref = firebase.database().ref("profiles/" + this.userDetails.user.uid).set({
-			fullName: this.userDetails.user.displayName,
-			email: this.userDetails.user.email,
-			photo : this.userDetails.user.photoURL
+		let ref = firebase.database().ref("profiles/" + this.userDetails.uid).set({
+			fullName: this.userDetails.displayName,
+			email: this.userDetails.email,
+			photo : this.userDetails.photoURL
 		});
 	}
 
@@ -60,7 +75,7 @@ function mainController($scope, $firebaseObject, $firebaseAuth){
 			let todoMeta = {
 				title: this.todoTitle,
 				timeAdded: Date.now(),
-				ownerId: this.userDetails.user.uid
+				ownerId: this.userDetails.uid
 			}
 
 			let addToAll = firebase.database().ref("todos/" + key).set(todoMeta);

@@ -11,23 +11,22 @@
 	
 	<section>
 		<h1>hello</h1>
-		<div ng-hide="main.isLoggedIn">You are browsing as a guest</div>
 		<div ng-show="main.isLoggedIn">
 			<span>Welcome back</span>
-			<span ng-if="main.userDetails">{{ main.userDetails.user.email }}</span>
+			<span ng-if="main.userDetails">{{ main.userDetails.email }}</span>
 		</div>
 	</section>
 
 	<section ng-hide="main.isLoggedIn">
 		<h2>log in</h2>
-		<div ng-click="main.signIn()">Sign in</div>
+		<div ng-click="main.signIn()">Sign in with personal account</div>
 	</section>
 
 	<section ng-show="main.isLoggedIn">
 
 		<div class="left">
 			<h2>log out</h2>
-			<div ng-click="main.signOut()">Sign out</div>
+			<div ng-click="main.signOut()">Sign out of personal account</div>
 		</div>
 
 		<div class="todo-app right">
